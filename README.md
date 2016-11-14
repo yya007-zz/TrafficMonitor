@@ -1,6 +1,6 @@
 # TrafficMonitor
-This project has the ability to filter all incoming/outgoing traffic.\n
-This project has the ability to filter incoming/outgoing traffic from/to specific addresses. Read the specific addresses using whichever way you decided to communicate to/from the kernel module (the instructions in the list above, for instance, described using the /proc filesystem to do this). For example, when the user modifies the appropriate file in /proc, your module should re-read the file and make sure it's filtering what is currently specified.\n
+This project has the ability to filter all incoming/outgoing traffic. /n
+This project has the ability to filter incoming/outgoing traffic from/to specific addresses. Read the specific addresses using whichever way you decided to communicate to/from the kernel module (the instructions in the list above, for instance, described using the /proc filesystem to do this). For example, when the user modifies the appropriate file in /proc, your module should re-read the file and make sure it's filtering what is currently specified. /n
 There is an entry in a log file, no more than 5MB, for each packet that is filtered. Include the address and timestamp. 
 The filtering is implemented by having your module register netfilter hooks. Some existing modules, such as iptables, already allow we to do this (and we can use the corresponding iptables program to modify the settings), so in a sense, we're implementing similar but simplified functionality.
 In project report, we describe how the netfilter hooks work, what kinds of hooks there are, and how you would implement more advanced functionality, such as a stateful firewall (https://en.wikipedia.org/wiki/Stateful_firewall).
