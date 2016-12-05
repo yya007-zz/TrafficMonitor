@@ -8,7 +8,19 @@ In project report, we describe how the netfilter hooks work, what kinds of hooks
 Describe, with netfilter specific terms, how qw would enforce a "quota" on how much traffic a user can generate to/from a specific address.<br />
 
 ## Functiolityna
+1.Monitor all Traffic
+2.Monitor all incoming Traffic
+3.Monitor all outgoing Traffic
+4.Monitor Traffic to a specific IP address
+5.Monitor Traffic from a specific IP address
+
+6.Block all Traffic
+7.Block all incoming Traffic
+8.Block all outgoing Traffic
+9.Block Traffic to a specific IP address
+10.Block Traffic from a specific IP address
 
 ## User Instruction
 1. Clone this project sd
 2. (Optional) Set target IP adress
+3. (Optional) Set function
