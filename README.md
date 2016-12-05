@@ -7,7 +7,7 @@ The filtering is implemented by having your module register netfilter hooks. Som
 In project report, we describe how the netfilter hooks work, what kinds of hooks there are, and how you would implement more advanced functionality, such as a stateful firewall (https://en.wikipedia.org/wiki/Stateful_firewall).<br />
 Describe, with netfilter specific terms, how qw would enforce a "quota" on how much traffic a user can generate to/from a specific address.<br />
 
-## Functiolityna
+## Function
 1.Monitor all Traffic<br />
 2.Monitor all incoming Traffic<br />
 3.Monitor all outgoing Traffic<br />
