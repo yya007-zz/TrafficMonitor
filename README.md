@@ -9,16 +9,12 @@ Describe, with netfilter specific terms, how qw would enforce a "quota" on how m
 
 ## Function
 1.Monitor all Traffic<br />
-2.Monitor all incoming Traffic<br />
-3.Monitor all outgoing Traffic<br />
-4.Monitor Traffic to a specific IP address<br />
-5.Monitor Traffic from a specific IP address<br />
+2.Monitor Traffic to a specific IP address<br />
+3.Monitor Traffic from a specific IP address<br />
 <br />
-6.Block all Traffic<br />
-7.Block all incoming Traffic<br />
-8.Block all outgoing Traffic<br />
-9.Block Traffic to a specific IP address<br />
-10.Block Traffic from a specific IP address<br />
+4.Block all Traffic<br />
+5.Block Traffic to a specific IP address<br />
+6.Block Traffic from a specific IP address<br />
 <br />
 ## User Instruction
 1. Clone this project sd<br />
