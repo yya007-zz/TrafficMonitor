@@ -1,0 +1,1 @@
+cmd_/home/vagrant/Desktop/cs281/trafficMonitors/netfilter/nf2.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/vagrant/Desktop/cs281/trafficMonitors/netfilter/nf2.ko /home/vagrant/Desktop/cs281/trafficMonitors/netfilter/nf2.o /home/vagrant/Desktop/cs281/trafficMonitors/netfilter/nf2.mod.o

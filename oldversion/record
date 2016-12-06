@@ -1,0 +1,77 @@
+
+/*  
+ *  hello-3.c - Illustrating the __init, __initdata and __exit macros.
+ */
+#include <linux/module.h>	/* Needed by all modules */
+#include <linux/kernel.h>	/* Needed for KERN_INFO */
+#include <linux/init.h>		/* Needed for the macros */
+
+static int hello3_data __initdata = 3;
+
+static int __init hello_3_init(void)
+{
+	printk(KERN_INFO "Hello, world %d\n", hello3_data);
+	return 0;
+}
+
+static void __exit hello_3_exit(void)
+{
+	printk(KERN_INFO "Goodbye, world 3\n");
+}
+
+module_init(hello_3_init);
+module_exit(hello_3_exit);
+
+/*
+ *  hello-1.c - The simplest kernel module.
+ */
+#include <linux/module.h>	/* Needed by all modules */
+#include <linux/kernel.h>	/* Needed for KERN_INFO */
+
+int init_module(void)
+{
+	printk(KERN_INFO "No Hello to Kenny.\nrmm");
+
+	/*
+	 * A non 0 return means init_module failed; module can't be loaded.
+	 */
+	return 0;
+}
+
+void cleanup_module(void)
+{
+	printk(KERN_INFO "Goodbye world 1.\n");
+}
+
+
+
+TARGET = main
+OBJS = main.o
+MDIR = drivers/misc
+
+EXTRA_CFLAGS = -DEXPORT_SYMTAB
+CURRENT = $(shell uname -r)
+KDIR = /lib/modules/$(CURRENT)/build
+PWD = $(shell pwd)
+DEST = /lib/modules/$(CURRENT)/kernel/$(MDIR)
+
+obj-m      := $(TARGET).o
+
+default:
+	make -C $(KDIR) SUBDIRS=$(PWD) modules
+
+$(TARGET).o: $(OBJS)
+	$(LD) $(LD_RFLAG) -r -o $@ $(OBJS)
+
+ifneq (,$(findstring 2.4.,$(CURRENT)))
+install:
+	su -c "cp -v $(TARGET).o $(DEST) && /sbin/depmod -a"
+else
+install:
+	su -c "cp -v $(TARGET).ko $(DEST) && /sbin/depmod -a"
+endif
+
+clean:
+	-rm -f *.o *.ko .*.cmd .*.flags *.mod.c
+
+-include $(KDIR)/Rules.make

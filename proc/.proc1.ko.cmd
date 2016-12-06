@@ -1,0 +1,1 @@
+cmd_/home/vagrant/Desktop/cs281/trafficMonitors/proc/proc1.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/vagrant/Desktop/cs281/trafficMonitors/proc/proc1.ko /home/vagrant/Desktop/cs281/trafficMonitors/proc/proc1.o /home/vagrant/Desktop/cs281/trafficMonitors/proc/proc1.mod.o

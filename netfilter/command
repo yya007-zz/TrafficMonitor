@@ -1,0 +1,10 @@
+rmmod nf2
+dmesg -c
+make
+insmod nf2.ko
+ping google.com	
+dmesg
+//should print hello
+
+clear:
+rmmod nf2
