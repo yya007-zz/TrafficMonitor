@@ -1,5 +1,5 @@
-#!/bin/bash
+﻿#!/bin/bash
 
-rmmod proc1;
-rmmod proc2;
-rmmod nf2
+sudo rmmod proc1;
+sudo rmmod proc2;
+sudo rmmod nf2

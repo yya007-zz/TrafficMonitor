@@ -91,7 +91,7 @@ unsigned int read(char *path) {
 //6.Block Traffic from a specific IP address
 unsigned int updatePara(int i){
 	
-	//restore to default
+//restore to default
 	drop = false;
 	monitorIn = true;
 	monitorOut = true;
@@ -179,7 +179,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
             		}
         	}
     	}
-    	return NF_ACCEPT;                                                                  //drops the packet
+    	return NF_ACCEPT;
 	
 }
 
