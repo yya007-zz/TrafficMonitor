@@ -1,15 +1,15 @@
-#!/bin/bash
-rmmod proc1;
-rmmod proc2;
-rmmod nf2
+﻿#!/bin/bash
+sudo rmmod proc1;
+sudo rmmod proc2;
+sudo rmmod nf2
 cd proc;
-dmesg -c
+sudo dmesg -c
 make;
-insmod proc1.ko;
-insmod proc2.ko;
+sudo insmod proc1.ko;
+sudo insmod proc2.ko;
 echo "172.0.1.1" >/proc/IP;
 echo "1" >/proc/Function ;
 cd ..;
 cd netfilter;
 make
-insmod nf2.ko
+sudo insmod nf2.ko
