@@ -18,5 +18,15 @@ Describe, with netfilter specific terms, how qw would enforce a "quota" on how m
 <br />
 ## User Instruction
 1. Clone this project sd<br />
-2. (Optional) Set target IP adress<br />
-3. (Optional) Set function<br />
+	git clone https://github.com/yya007/TrafficMonitor.git
+	cd TrafficMonitor
+2. running the project
+	bash build.sh
+3. (Optional) Set target IP adress<br />
+	eg. echo "127.168.1.1" >/proc/IP;
+4. (Optional) Set function<br />
+	eg. echo "1" >/proc/Function ;
+	NO: "1" means Monitor all Traffic, other function see Function section
+	Illegal input will not change current funciton.
+5. Check the log file
+	cat 
