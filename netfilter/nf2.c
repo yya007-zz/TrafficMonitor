@@ -90,19 +90,24 @@ unsigned int read(char *path) {
 //5.Block Traffic to a specific IP address
 //6.Block Traffic from a specific IP address
 unsigned int updatePara(int i){
-	bool drop = false;
-	if(i>3){
-		drop=true;
-		i=i-3;
-	}else{
-		drop=false;
-	}
-	if(i==1){
-	specificIP=false;
+	
+	//restore to default
+	drop = false;
 	monitorIn = true;
 	monitorOut = true;
+	specificIP = false;
+	
+	if(i>3){ // i being greater than 3 ==> we need to block some traffic
+		drop=true;
+		i=i-3;
+	}
+	
+	//now let's set the details
+	if(i==1){
+		//default will suffice
 	return 0;
 	}
+	
 	specificIP=true;
 	if(i==2){
 		monitorOut=false;
@@ -112,6 +117,8 @@ unsigned int updatePara(int i){
 		monitorIn=false;
 		return 0;
 	}
+	
+	printk(KERN_INFO "invaild function number received");
 	return 1;
 }
 
