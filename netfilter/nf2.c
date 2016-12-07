@@ -39,7 +39,7 @@ unsigned int string_Length(char* data){
 }
 
 
-//compare two char array, ignore blank at tail
+/*//compare two char array, ignore blank at tail
 //Eg: "1 " is equal to "1"
 bool string_Com(char* s1,char* s2){
 	int i;
@@ -50,7 +50,7 @@ bool string_Com(char* s1,char* s2){
 		return s2[i]==0;
 	}
 	return s1[i]==0;
-}
+}*/
 
 //read to content in file path to temp
 //return 0 if not read anything
@@ -129,8 +129,9 @@ unsigned int printInfo(char* source, char* dest, struct sk_buff *skb) {
     	struct tm broken;
     	do_gettimeofday(&t);
     	time_to_tm(t.tv_sec, 0, &broken);
+	
    	printk("\nTimestamp: %d:%d:%d:%ld", broken.tm_hour, broken.tm_min,broken.tm_sec, t.tv_usec);
-    	printk(KERN_INFO "From %s to %s\n", source, dest);
+    	printk(KERN_INFO "From %s to %s\n is %d", source, dest, foo);
     	printk(KERN_INFO "size of data:\t%d\n", string_Length(skb->data));
     	printk(KERN_INFO "data:\t%s\n", (skb->data));
 	return 0;
@@ -145,13 +146,13 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
 	char source[20], dest[20];
 	//update IP
 	r=read(IP_file);
-	if(r!=0&&!string_Com(IP,buff)){
+	if(r!=0&&!strcmp(IP,buff)){
 		printk("%s update IP to %s from %s\n",KERN_INFO,buff,IP);
 		snprintf(IP, 20, "%s", buff);
 	}
 	//update func
 	f=read(Function_file);
-	if(f!=0&&string_Com(func,buff)){
+	if(f!=0&&strcmp(func,buff)){
 		printk("%s update func to %s from %s\n",KERN_INFO,buff,func);
 		snprintf(func, 20, "%s", buff);
 		updatePara(func[0]-'0');
@@ -162,7 +163,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
     	snprintf(dest, 20, "%pI4", &iph->daddr);
     	//if we are monitoring traffic only
     	if (monitorIn) {
-        	if (!specificIP || string_Com(IP,source)) {
+        	if (!specificIP || strcmp(IP,source)) {
             		printInfo(source,dest,skb);
             		if (drop) {
                 		printk(KERN_INFO "package dropped\n\n");
@@ -171,7 +172,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
         	}
     	}
     	if (monitorOut) {
-        	if (!specificIP || string_Com(IP,dest)) {
+        	if (!specificIP || strcmp(IP,dest)) {
             		printInfo(source,dest,skb);
             		if (drop) {
                 		printk(KERN_INFO "package dropped\n\n");
