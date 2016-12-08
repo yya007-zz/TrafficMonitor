@@ -39,18 +39,15 @@ unsigned int string_Length(char* data){
 }
 
 
-/*//compare two char array, ignore blank at tail
+//compare two char array, ignore blank at tail
 //Eg: "1 " is equal to "1"
 bool string_Com(char* s1,char* s2){
 	int i;
 	for(i=0;s1[i]&&s2[i];i++){
 		if(s1[i]!=s2[i]) return false;
 	}
-	if(!s1[i]){
-		return s2[i]==0;
-	}
-	return s1[i]==0;
-}*/
+	return true;
+}
 
 //read to content in file path to temp
 //return 0 if not read anything
@@ -146,13 +143,13 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
 	char source[20], dest[20];
 	//update IP
 	r=read(IP_file);
-	if(r!=0&&strcmp(IP,buff)!=0){
+	if(r!=0&&!string_Com(IP,buff)){
 		printk("%s update IP to %s from %s\n",KERN_INFO,buff,IP);
 		snprintf(IP, 20, "%s", buff);
 	}
 	//update func
 	f=read(Function_file);
-	if(f!=0&&strcmp(func,buff)!=0){
+	if(f!=0&&!string_Com(func,buff)){
 		printk("%s update func to %s from %s\n",KERN_INFO,buff,func);
 		snprintf(func, 20, "%s", buff);
 		updatePara(func[0]-'0');
@@ -163,7 +160,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
     	snprintf(dest, 20, "%pI4", &iph->daddr);
     	//if we are monitoring traffic only
     	if (monitorIn) {
-        	if (!specificIP || strcmp(IP,source)==0) {
+        	if (!specificIP || string_Com(IP,source)) {
             		printInfo(source,dest,skb);
             		if (drop) {
                 		printk(KERN_INFO "package dropped\n\n");
@@ -172,7 +169,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
         	}
     	}
     	if (monitorOut) {
-        	if (!specificIP || strcmp(IP,dest)==0) {
+        	if (!specificIP || string_Com(IP,dest)) {
             		printInfo(source,dest,skb);
             		if (drop) {
                 		printk(KERN_INFO "package dropped\n\n");
@@ -194,13 +191,15 @@ int init_module()
 
 	nfhoIn.hook = hook_func;                       //function to call when conditions below met
 	//NF_IP_PRE_ROUTING=0
-	nfhoIn.hooknum = 0;            //called right after packet recieved, first hook in Netfilter
+	//NF_IP_LOCAL_IN=1
+	nfhoIn.hooknum = 1;            //called right after packet recieved, first hook in Netfilter
 	nfhoIn.pf = PF_INET;                           //IPV4 packets
   	nfhoIn.priority = NF_IP_PRI_FIRST;             //set to highest priority over all other hook functions
   	
 	nfhoOut.hook = hook_func;                       //function to call when conditions below met
 	//NF_IP_POST_ROUTING=4
-	nfhoOut.hooknum = 4;            //called right after packet recieved, first hook in Netfilter
+	//NF_IP_LOCAL_OUT=3
+	nfhoOut.hooknum = 3;            //called right after packet recieved, first hook in Netfilter
 	nfhoOut.pf = PF_INET;
 	nfhoOut.priority = NF_IP_PRI_FIRST; 
 	nf_register_hook(&nfhoIn);                     //register hook

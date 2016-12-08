@@ -21,7 +21,6 @@ __attribute__((section("__versions"))) = {
 	{ 0x138fe6fb, __VMLINUX_SYMBOL_STR(nf_unregister_hook) },
 	{ 0x7ed82276, __VMLINUX_SYMBOL_STR(nf_register_hook) },
 	{ 0x28318305, __VMLINUX_SYMBOL_STR(snprintf) },
-	{ 0xe2d5255a, __VMLINUX_SYMBOL_STR(strcmp) },
 	{ 0x92a9c60c, __VMLINUX_SYMBOL_STR(time_to_tm) },
 	{ 0x4f68e5c9, __VMLINUX_SYMBOL_STR(do_gettimeofday) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
@@ -39,4 +38,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "EF24B524BFA342A4D547D4E");
+MODULE_INFO(srcversion, "99176095ADB297787B9CEA0");
