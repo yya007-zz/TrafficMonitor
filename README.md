@@ -1,16 +1,4 @@
-# TrafficMonitor
-## This project is created for Operating System Final Project
-This project has the ability to filter all incoming/outgoing traffic. <br />
-This project has the ability to filter incoming/outgoing traffic from/to specific addresses. 
-Read the specific addresses using whichever way you decided to communicate to/from the kernel module (the instructions in the list above, 
-for instance, described using the /proc filesystem to do this). For example, when the user modifies the appropriate file in /proc, 
-your module should re-read the file and make sure it's filtering what is currently specified. <br />
-There is an entry in a log file, no more than 5MB, for each packet that is filtered. Include the address and timestamp. <br />
-The filtering is implemented by having your module register netfilter hooks. Some existing modules, such as iptables, already allow we to do this 
-(and we can use the corresponding iptables program to modify the settings), so in a sense, we're implementing similar but simplified functionality.<br />
-In project report, we describe how the netfilter hooks work, what kinds of hooks there are, and how you would implement more advanced functionality, 
-such as a stateful firewall (https://en.wikipedia.org/wiki/Stateful_firewall).<br />
-Describe, with netfilter specific terms, how qw would enforce a "quota" on how much traffic a user can generate to/from a specific address.<br />
+The goal of this final project is to implement a Linux Kernel Module which monitors or filters network traffic. The project could be structurally broken up to two parts, namely the kernel module and the Netfilter. Kernel modules are runnable extensions that could be loaded and unload into the kernel. For our project, kernel modules are planted to implement certain functions such as reading and writing to proc files and filtering net traffic. Netfilter is a kernel-provided framework that provides the constants, structures and functions to monitor or drop communication to different IP addresses. 
 
 ## Function
 1.Monitor all Traffic<br />
