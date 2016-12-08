@@ -20,6 +20,6 @@ The goal of this final project is to implement a Linux Kernel Module which monit
 4. (Optional) Set function<br />
 	eg. echo "1" >/proc/Function <br />
 	NO: "1" means Monitor all Traffic, other function see Function section<br />
-	Illegal input will not change current funciton.<br />
+	Illegal input will not change current function.<br />
 5. Check the log file<br />
 	cat <br />
