@@ -51,6 +51,7 @@ bool string_Com(char* s1,char* s2){
 
 //read to content in file path to temp
 //return 0 if not read anything
+//refernce link:https://www.howtoforge.com/reading-files-from-the-linux-kernel-space-module-driver-fedora-14
 unsigned int read(char *path) {
 	int i,err;
 	struct file *f;
@@ -155,6 +156,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
 		updatePara(func[0]-'0');
 	}
 	//get send and destination address of package	
+	//reference link http://stackoverflow.com/questions/9296835/convert-source-ip-address-from-struct-iphdr-to-string-equivalent-using-linux-ne
 	iph = ip_hdr(skb);
     	snprintf(source, 20, "%pI4", &iph->saddr);
     	snprintf(dest, 20, "%pI4", &iph->daddr);
@@ -182,27 +184,33 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
 }
 
 //Called when module loaded using 'insmod'
+//reference link:http://www.paulkiddie.com/2009/11/creating-a-netfilter-kernel-module-which-filters-udp-packets/
 int init_module()
 {	
 	//set the default IP
 	snprintf(IP, 20, "%s", "127.0.1.1");
 	snprintf(func, 20, "%s", "1");
 	printk("%s %s\n", KERN_INFO, IP);   	
-
-	nfhoIn.hook = hook_func;                       //function to call when conditions below met
+	
+	//hook to process all incoming packages
+	nfhoIn.hook = hook_func;                      
 	//NF_IP_PRE_ROUTING=0
 	//NF_IP_LOCAL_IN=1
-	nfhoIn.hooknum = 1;            //called right after packet recieved, first hook in Netfilter
-	nfhoIn.pf = PF_INET;                           //IPV4 packets
-  	nfhoIn.priority = NF_IP_PRI_FIRST;             //set to highest priority over all other hook functions
+	nfhoIn.hooknum = 1;            			
+	nfhoIn.pf = PF_INET;  
+	//set to highest priority over all other hook functions                         	
+  	nfhoIn.priority = NF_IP_PRI_FIRST;             	
   	
-	nfhoOut.hook = hook_func;                       //function to call when conditions below met
+	//hook to process all out going packages
+	nfhoOut.hook = hook_func;                     
 	//NF_IP_POST_ROUTING=4
 	//NF_IP_LOCAL_OUT=3
-	nfhoOut.hooknum = 3;            //called right after packet recieved, first hook in Netfilter
+	nfhoOut.hooknum = 3;           			
 	nfhoOut.pf = PF_INET;
+	//set to highest priority over all other hook functions
 	nfhoOut.priority = NF_IP_PRI_FIRST; 
-	nf_register_hook(&nfhoIn);                     //register hook
+	//register both hooks
+	nf_register_hook(&nfhoIn);                     	
 	nf_register_hook(&nfhoOut);
   	return 0;                                    //return 0 for success
 }
