@@ -15,8 +15,8 @@
 #include <linux/fs.h>      // Needed by filp
 #include <asm/uaccess.h>   // Needed by segment descriptors
 MODULE_LICENSE("GPL");
-static struct nf_hook_ops nfho;         //struct holding set of hook function options
-
+static struct nf_hook_ops nfhoIn;         //struct holding set of hook function options
+static struct nf_hook_ops nfhoOut;  
 //default setting of the project
 static char* IP_file="/proc/IP";
 static char* Function_file="/proc/Function";
@@ -28,7 +28,7 @@ bool drop = false;
 bool monitorIn = true;
 bool monitorOut = true;
 bool specificIP = false;
-
+int hooknumber=0;
 
 //return the length of a char array
 unsigned int string_Length(char* data){
@@ -96,7 +96,7 @@ unsigned int updatePara(int i){
 	monitorIn = true;
 	monitorOut = true;
 	specificIP = false;
-	
+	hooknumber=0;
 	if(i>3){ // i being greater than 3 ==> we need to block some traffic
 		drop=true;
 		i=i-3;
@@ -131,7 +131,8 @@ unsigned int printInfo(char* source, char* dest, struct sk_buff *skb) {
     	time_to_tm(t.tv_sec, 0, &broken);
 	
    	printk("\nTimestamp: %d:%d:%d:%ld", broken.tm_hour, broken.tm_min,broken.tm_sec, t.tv_usec);
-    	printk(KERN_INFO "From %s to %s\n is %d", source, dest, foo);
+    	//printk(KERN_INFO "From %s to %s\n is %d", source, dest, foo);
+	printk(KERN_INFO "From %s to %s\n", source, dest);
     	printk(KERN_INFO "size of data:\t%d\n", string_Length(skb->data));
     	printk(KERN_INFO "data:\t%s\n", (skb->data));
 	return 0;
@@ -140,19 +141,18 @@ unsigned int printInfo(char* source, char* dest, struct sk_buff *skb) {
 
 //function to be called by hook
 unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_state *state)
-{	
-	int r,f;
+{	int r,f;
 	struct iphdr* iph;
 	char source[20], dest[20];
 	//update IP
 	r=read(IP_file);
-	if(r!=0&&!strcmp(IP,buff)){
+	if(r!=0&&strcmp(IP,buff)!=0){
 		printk("%s update IP to %s from %s\n",KERN_INFO,buff,IP);
 		snprintf(IP, 20, "%s", buff);
 	}
 	//update func
 	f=read(Function_file);
-	if(f!=0&&strcmp(func,buff)){
+	if(f!=0&&strcmp(func,buff)!=0){
 		printk("%s update func to %s from %s\n",KERN_INFO,buff,func);
 		snprintf(func, 20, "%s", buff);
 		updatePara(func[0]-'0');
@@ -163,7 +163,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
     	snprintf(dest, 20, "%pI4", &iph->daddr);
     	//if we are monitoring traffic only
     	if (monitorIn) {
-        	if (!specificIP || strcmp(IP,source)) {
+        	if (!specificIP || strcmp(IP,source)==0) {
             		printInfo(source,dest,skb);
             		if (drop) {
                 		printk(KERN_INFO "package dropped\n\n");
@@ -172,7 +172,7 @@ unsigned int hook_func(void *priv, struct sk_buff *skb, const struct nf_hook_sta
         	}
     	}
     	if (monitorOut) {
-        	if (!specificIP || strcmp(IP,dest)) {
+        	if (!specificIP || strcmp(IP,dest)==0) {
             		printInfo(source,dest,skb);
             		if (drop) {
                 		printk(KERN_INFO "package dropped\n\n");
@@ -192,13 +192,19 @@ int init_module()
 	snprintf(func, 20, "%s", "1");
 	printk("%s %s\n", KERN_INFO, IP);   	
 
-	nfho.hook = hook_func;                       //function to call when conditions below met
+	nfhoIn.hook = hook_func;                       //function to call when conditions below met
 	//NF_IP_PRE_ROUTING=0
-	nfho.hooknum = 0;            //called right after packet recieved, first hook in Netfilter
-	nfho.pf = PF_INET;                           //IPV4 packets
-  	nfho.priority = NF_IP_PRI_FIRST;             //set to highest priority over all other hook functions
-  	nf_register_hook(&nfho);                     //register hook
-
+	nfhoIn.hooknum = 0;            //called right after packet recieved, first hook in Netfilter
+	nfhoIn.pf = PF_INET;                           //IPV4 packets
+  	nfhoIn.priority = NF_IP_PRI_FIRST;             //set to highest priority over all other hook functions
+  	
+	nfhoOut.hook = hook_func;                       //function to call when conditions below met
+	//NF_IP_POST_ROUTING=4
+	nfhoOut.hooknum = 4;            //called right after packet recieved, first hook in Netfilter
+	nfhoOut.pf = PF_INET;
+	nfhoOut.priority = NF_IP_PRI_FIRST; 
+	nf_register_hook(&nfhoIn);                     //register hook
+	nf_register_hook(&nfhoOut);
   	return 0;                                    //return 0 for success
 }
 
@@ -206,5 +212,6 @@ int init_module()
 //Called when module unloaded using 'rmmod'
 void cleanup_module()
 {
-  	nf_unregister_hook(&nfho);                     //cleanup – unregister hook
+  	nf_unregister_hook(&nfhoIn);                     \
+	nf_unregister_hook(&nfhoOut);                    //cleanup – unregister hook
 }

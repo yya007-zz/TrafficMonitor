@@ -7,8 +7,8 @@ sudo dmesg -c
 make;
 sudo insmod proc1.ko;
 sudo insmod proc2.ko;
-echo "172.0.1.1" >/proc/IP;
-echo "4" >/proc/Function ;
+echo "172.1.1.1" >/proc/IP;
+echo "1" >/proc/Function ;
 cd ..;
 cd netfilter;
 make
